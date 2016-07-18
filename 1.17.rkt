@@ -1,0 +1,13 @@
+#lang racket
+(define (even n)
+  (= (remainder n 2) 0))
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-multiply a b)
+  (cond ((= 1 b) a)
+        ((<= b 0) 0)
+        ((even b) (double (fast-multiply a (halve b))))
+        (else (+ a (double (fast-multiply a (halve (- b 1))))))))
+(fast-multiply 2 5)

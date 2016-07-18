@@ -1,0 +1,22 @@
+#lang racket
+(define (mi b n)
+  (if (= n 0)
+      1
+      (* b (mi b (- n 1)))))
+(define (mi-iter b n product)
+  (if (= n 0)
+      product
+      (mi-iter b (- n 1) (* product b))))
+(define (even n)
+  (= (remainder n 2) 0))
+(define (square x)
+  (* x x))
+(define (fast-mi b n)
+  (cond ((= n 0) 1)
+        ((even n) (square (fast-mi b (/ n 2))))
+        (else (* b (fast-mi b (- n 1))))))
+(define (fast-mi-iter b n a)
+  (cond ((< n 2) a)
+        ((even n) (fast-mi-iter b (/ n 2) (* a (square b))))
+        (else (fast-mi-iter b (- n 1) (* a b)))))
+(fast-mi-iter 2 4 1)

@@ -1,0 +1,42 @@
+#lang racket
+(define (square x) (* x x))
+(define (abx x) (if (< x 0) (- x) x))
+(define (average x y) (/ (+ x y) 2))
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough guess x)
+  (< (abs (-
+          (square guess) x)) 0.001))
+(define (sqrt x)
+  (define (sqrt-iter guess x)
+    (if (good-enough guess x)
+        guess
+        (sqrt-iter (improve guess x) x)))
+  (sqrt-iter 1 x))
+(define (fib n)
+  (define (fib-iter a b count)
+    (if ( = count 0)
+        b
+        (fib-iter (+ a b) a
+                  (- count 1))))
+  (fib-iter 1 0 n)
+  )
+
+(define (p) (/ (+ 1 (sqrt 5)) 2))
+(define (h) (/ (- 1 (sqrt 5)) 2))
+(define (N x y)
+  (define (N-iter n count product)
+    (if (= 1 count)
+        (* n product)
+        (N-iter n (- count 1) (* product n))))
+  (N-iter x y 1))
+
+(define (g n)
+  (/ (- (N (p) n) (N (h) n)) (sqrt 5)))
+(define (fib-equal n)
+  (if (< (abs (- (fib n) (g n))) 0.0001)
+      1
+      0))
+(fib 5)
+(g 5)
+(fib-equal 5)

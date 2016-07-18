@@ -1,0 +1,25 @@
+#lang racket
+(define test `((1 2 3) (4 5 6) (7 8 9) (10 11 12)))
+test
+(cdr test)
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      `()
+      (cons (accumulate op init  (mapa seqs))
+            (accumulate-n op init (mapb seqs)))))
+(define (mapa seqs)
+  (map (lambda (x)
+         (car x))
+       seqs))
+(define (mapb seqs)
+  (map (lambda (x)
+         (cdr x))
+       seqs))
+(mapa test)
+         
+(accumulate-n + 0 test)

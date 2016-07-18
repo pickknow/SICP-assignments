@@ -1,0 +1,22 @@
+#lang racket
+(define (f n)
+  (if (< n 3)
+      n
+      (+ (f (- n 1))
+         (* 2 (f (- n 2)))
+         (* 3 (f (- n 3))))))
+(f 5)
+(f 6)
+(define (h n)
+  (define (p a b c)
+    (+ c (* 2 b) (* 3 a)))
+ (define (h-iter a b c n)
+   (if (= n 1)
+       (p a b c)
+       (h-iter b c (p a b c) (- n 1))))
+  (if (< n 3)
+      n
+      (h-iter 0 1 2 (- n 2))))
+(h 5)
+(h 6)
+  

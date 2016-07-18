@@ -1,0 +1,20 @@
+#lang racket
+(define (square x) (* x x))
+(define test (list 1 (list 2 (list 3 ) 5) (list 6 7)))
+test
+
+(define (square-tree-map tree f)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (square-tree-map sub-tree f)
+             (f sub-tree)))
+       tree))
+(define (tree-map f tree)
+  (map (lambda (x)
+         (if (pair? x)
+             (tree-map f  x)
+             (f x)))
+       tree))
+(define (square-tree2 tree)
+  (tree-map square tree))
+(square-tree2 test)

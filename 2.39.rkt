@@ -1,0 +1,26 @@
+#lang racket
+(define test `(1 2 3 4))
+(reverse test)
+(define (fold-right op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (fold-right op initial (cdr sequence)))))
+(define (fold-left op initial sequence)
+  (define (iter result seq)
+    (if (null? seq)
+        result
+        (iter (op result (car seq))
+              (cdr seq))))
+  (iter initial sequence))
+(define (reserve-r seq)
+  (fold-right (lambda (x y)
+                (append y (list x)))
+              null seq))
+(reserve-r test)
+(define (reverse-l seq)
+  (fold-left (lambda (x y)
+               (append (list y) x))
+             null
+             seq))
+(reverse-l test)
