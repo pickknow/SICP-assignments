@@ -12,7 +12,7 @@
 (define (x-point x) (car x))
 (define (y-point y) (cdr y))
 
-(define (midpoint-segment x)  
+(define (midpoint-segment x)
   (let ((midx (/ (+ (car (car x)) (car (cdr x))) 2))
         (midy (/ (+ (cdr (car x)) (cdr (cdr x))) 2)))
         (cons midx midy)))
@@ -28,4 +28,3 @@
 (print-point (midpoint-segment
               (make-segment (make-point 1 1)
                             (make-point 3 3))))
-
