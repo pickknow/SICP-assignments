@@ -1,0 +1,23 @@
+#lang racket
+(define (point x y) (list x y))
+(define (make-vect a b) (cons a b))
+(define xcor-vect car)
+(define ycor-vect cdr)
+(define (scale-vect x y)
+  (cons (* x (xcor-vect y))
+        (* x (ycor-vcet y))))
+(define (add-vect v1 v2)
+  (cons (+ (xcor-vect v1) (xcor-vect v2))
+        (+ (ycor-vect v1) (ycor-vect v2))))
+(define (sub-vect v1 v2)
+  (cons (- (xcor-vect v2) (xcor-vect v1))
+        (- (ycor-vect v2) (ycor-vect v1))))
+
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+     (origin-frame framd)
+     (add-vect (scale-vect (xcor-vect v)
+                           (edge1-frame frame))
+               (scale-vect (ycor-vect v)
+                           (edge2-frame frame))))))
