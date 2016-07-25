@@ -27,6 +27,20 @@
                             (term-list p2)))
       (error "Polys not in same var --MUL-POLY"
              (list p1 p2))))
+(define (sub-poly p1 p2)
+  (if (same-variable? (variable p1) (variable p2))
+      (make-poly (varialbe p1)
+                 (sub-term (term-list p1)
+                           (term-list p2)))
+      (error "Polys not in same var --SUB-POLY"
+             (list p1 p2))))
+(define (div-poly p1 p2)
+  (if (same-variable? (variable p1) (variable p2))
+      (make-poly (variable p1)
+                 (div-term (term-list p1)
+                           (term-list p2)))
+      (error "Polys not in same var --DIV-POLY"
+             (list p1 p2))))
 (define (add-terms l1 l2)
   (cond ((empty-termlist? l1) l2)
         ((empty-termlist? l2) l1)
@@ -79,19 +93,35 @@
                    (make-term (oerder t1) 1)
                    (div-term (rest-terms l1)
                              (rest-terms l2)))))))))
-        
+;以下为稀疏多项式  sparse
+;稠密多项式terms((100 1) (2 2) (0 1))
+;sparse (1 2 0 3 -2 -5)
+(define (len poly-sparse) (- (length poly-sparse) 1))
+(define (make-poly-sparse x y) (cons x y))
+(define (make-term-sparse  x y)
+  (let ((a (if (pair? x) x (list x)))
+        (b (if (pair? y) y (list y))))
+    (append x y)))
+(define (add-poly-sparse l1 l2)
+  (if (same-variable? l1 l2)
+      (make-poly-sparse (variable l1)
+                        (add-term-sparse (term-list l1)
+                                         (term-list l2)))
+      (error "Polys not in same variable --ADD-POLY-SPARSE"
+             （list l1 l2)))
+(define (add-term-sparse l1 l2)
+  (cond ((empty-termlist? l1) l2)
+        ((empty-termlist? l2) l2)
+        (else
+         (let ((t1 (len l1)) (t2 (len l2)))
+           (cond ((> t1 t2)
+                  (adjoin-term (car l1)
+                               (add-term-sparse (cdr l1) l2)))
+                 ((< t1 t2)
+                  (adjoin-term (car l2)
+                               (add-term-sparse l1 (cdr l2))))
+                 (else
+                  (adjoin-term
+                   (add (car l1) (car l2))
+                   (add-term-sparse (cdr l1) (cdr l2)))))))))
 
-(define (sub-poly p1 p2)
-  (if (same-variable? (variable p1) (variable p2))
-      (make-poly (varialbe p1)
-                 (sub-term (term-list p1)
-                           (term-list p2)))
-      (error "Polys not in same var --SUB-POLY"
-             (list p1 p2))))
-(define (div-poly p1 p2)
-  (if (same-variable? (variable p1) (variable p2))
-      (make-poly (variable p1)
-                 (div-term (term-list p1)
-                           (term-list p2)))
-      (error "Polys not in same var --DIV-POLY"
-             (list p1 p2))))
