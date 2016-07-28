@@ -5,7 +5,7 @@
          (car set-of-records))
         (else (lookup given-key (cdr set-of-records)))))
 (define (lookup-tree g-key tree)
-  (if (null? records)
+  (if (null? tree)
       false
       (let ((k (key (entry tree))))
         (cond ((= g-key k) (entry tree))
