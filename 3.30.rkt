@@ -13,10 +13,6 @@
     (half-adder b c-in s c1)
     (half-adder a s sum c2)
     (or-gate c1 c2 c-out)))
-;(get-signal wire)
-;(set-signal! wire new-signal)
-;(add-action! wire procedure)
-;after-delay
 (define (logical-not s)
   (cond ((= s 0) 1)
         ((= s 1) 0)
@@ -52,15 +48,19 @@
   (add-action! a1 or-action-procedure)
   (add-action! a2 or-action-procedure)
   `ok)
-(define (or-gate2 a1 a2 output)
-  (define (or-gate-procedure)
-    (let ((c (make-wire)))
-      (add-gate a1 a2 c)
-      (inverter c output)
-      (after-delay and-gate-delay
-                   (lambda()
-                     (after-delay inverter-delay
-                                  (lambda()))))))
-  (add-action! a1 or-action-procedure)
-  (add-action! a2 or-action-procedure)
-  `ok)
+(define (ripple-carry-adder A B C S C-out)
+  (cond ((or (null? A) (null? B)) C-out)
+        (else
+         (full-adder (car A)
+                       (car B)
+                       C
+                       (car S)
+                       C-out)
+           (repple-carry-adder (cdr A)
+                               (cdr B)
+                               c1
+                               (cdr S)
+                               C-out))))
+;half-adder = or + and + inver + and
+;full = half-adder *2 + all
+; n((or + inver ) * 2 + and*5)

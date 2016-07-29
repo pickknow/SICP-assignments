@@ -1,4 +1,3 @@
-#lang racket
 (define (square x) (* x x))
 (define (abx x) (if (< x 0) (- x) x))
 (define (average x y) (/ (+ x y) 2))
