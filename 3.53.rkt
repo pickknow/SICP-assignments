@@ -1,0 +1,20 @@
+(defne (integers-strating-from n)
+  (cons-stream n (inter-starting-from (+ n 1))))
+(define integers (integers-starting-from 1))
+(define (divisible? x y) (= (remainder x y) 0))
+(define no-sevens
+  (stream-filter (lambda (x) (not (divesible? x 7)))
+                 integers))
+(define (sieve stream)
+  (cons-stream
+   (stream-car stream)
+   (sieve (stream-filter
+           (lambda (x)
+             (not (divsible? x (stream-car stream))))
+           (stream-cdr stream)))))
+(define ones (cons-stream 1 ones))
+(define (add-streams s1 s2)
+  (stream-map + s1 s2))
+(define integers1 (cons-stream 1 (add-streams ones integers1)))
+(define (scale-stream stream factor)
+  (stream-map (lambda (x) (* x factor)) stream))
