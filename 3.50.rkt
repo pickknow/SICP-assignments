@@ -31,9 +31,10 @@
                          (stream-map1 proc (stream-cdr s))))))
 
 (define (stream-map proc . agrstreams)
-  (if ((stream-null? (car agrstreams)) the-empty-stream)
+  (if (stream-null? (car agrstreams))
+      the-empty-stream
       (cons-stream
-       (apply proc (map stream-car argstreams))
+       (apply proc (map car argstreams))
        (apply stream-map
-              (cons proc (map stream-cdr argstreams))))))
+              (cons proc (map cdr argstreams))))))
                     
