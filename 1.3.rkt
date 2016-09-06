@@ -1,0 +1,7 @@
+(define (sum-max-two a b c)
+  (cond ((and (< a b) (< a c)) (+ b c))
+        ((and (< b a) (< b c)) (+ a c))
+        (else (+ a b))))
+(sum-max-two 1 2 3)
+(sum-max-two 1 3 2)
+(sum-max-two 3 1 2)
