@@ -1,4 +1,3 @@
-#lang racket
 (define (f n)
   (if (< n 3)
       n

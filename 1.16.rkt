@@ -1,4 +1,3 @@
-#lang racket
 (define (mi b n)
   (if (= n 0)
       1

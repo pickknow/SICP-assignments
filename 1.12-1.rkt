@@ -1,14 +1,14 @@
-#lang racket
-(define (fa a count)
-  (newline)
+(define (fa a count) 
   (cond ((>= a count)
-         (f 0 count 1)))
-  (cond ((>= a count) 
-      (fa a  (+ count 1)))))      
+         (f 0 count 1);display a line
+         (newline)
+         (fa a  (+ count 1)))));next line
+
 (define (f a b p)
-  (cond ((> a 0) (print p)))
+  (cond ((> a 0) (display p)))
   (cond ((< a b)
          (f (+ a 1) b (g a (- b 1))))))
+
 (define (g a b)
   (if (or (= a 0) (= a b))
       1

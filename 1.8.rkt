@@ -10,6 +10,5 @@
   (< (abs (- x (cube guess))) 0.001))
 (define (cube x) (* x x x))
 (define (square x) (* x x))
-
 (cube-root 1.0 27)
 ;3.000

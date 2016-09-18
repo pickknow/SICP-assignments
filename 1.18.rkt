@@ -1,6 +1,3 @@
-#lang racket
-(define (even n)
-  (= (remainder n 2) 0))
 (define (double x)
   (+ x x))
 (define (halve x)
@@ -8,12 +5,18 @@
 (define (fast-multiply a b)
   (cond ((= 1 b) a)
         ((<= b 0) 0)
-        ((even b) (double (fast-multiply a (halve b))))
+        ((even? b) (double (fast-multiply a (halve b))))
         (else (+ a (double (fast-multiply a (halve (- b 1))))))))
 
 (define (mul-iter a b p)
   (cond ((<= b 0) 0)
         ((< b 2) (+ a p))
-        ((even b) (mul-iter (double a) (halve b) p))
+        ((even? b) (mul-iter (double a) (halve b) p))
         (else (mul-iter a (- b 1) (+ p a)))))
-(mul-iter 2 7 0)
+(mul-iter 10 15 0)
+;second edition
+(define (product x y p)
+  (cond ((= y 0) p)
+        ((even? y) (product (double x) (halve y) p))
+        (else (product x (- y 1) (+ p x)))))
+(product 10 15 0)
