@@ -7,10 +7,9 @@
       (cons n  d)))
 
 (define (make-rat-better n d)
-  (let ((g (gcd (abs n) (abs d))))
-    (if (and (> n 0) (> d 0))
-        (cons (/ n g) (/ d g))
-        (cons (- (/ (abs n) g)) (/ (abs d) g)))))
+  (if (and (> n 0) (> d 0))
+      (cons n d)
+      (cons (- n) (abs d))))
 (define (print-rat x)
   (newline)
   (display (numer x))

@@ -1,6 +1,5 @@
 #lang racket
 (define (average x y)  (/ (+ x y) 2))
-(define (cube x) (* x x x))
 (define (square x) (* x x))
 (define tolerance 0.0001)
 (define (fixed-point f first-guess)
@@ -22,6 +21,7 @@
   (lambda (x)
     (/ (- (g (+ x dx)) (g x))
        dx)))
+(define (cube x) (* x x x))
 (define (newtons-transform g)
   (lambda (x)
     (- x (/ (g x) ((deriv g) x)))))

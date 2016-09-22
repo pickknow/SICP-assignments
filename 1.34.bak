@@ -1,0 +1,1 @@
+; result : 2 is not a procedure

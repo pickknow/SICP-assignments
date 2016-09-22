@@ -1,21 +1,21 @@
-(define (identity x) x)
-(define (inc x) (+ x 1))
-(define (plus x y) (+ x y))
-(define (mul x y) (* x y))
+#lang racket
 (define (accumulate combiner null-value term a next b)
   (if (> a b)
       null-value
       (combiner (term a)
                 (accumulate combiner null-value term (next a) next b))))
  
-
+(define (identity x) x)
+(define (inc x) (+ x 1))
+(define (plus x y) (+ x y))
+(define (mul x y) (* x y))
 (define (accu-iter combiner null-value term a next b)
   (define (iter a result)
     (if (> a b)
         result
         (iter (next a) (combiner result (term a)))))
   (iter a null-value))
-;(accu-iter mul 1 identity 1 inc 4)
+(accu-iter mul 1 identity 1 inc 4)
 
 (define (filter-acct filter combiner null-value term a next b)
   (define (iter a result)
@@ -26,18 +26,5 @@
                                      (term a)
                                      null-value)))))
   (iter a null-value))
-;(filter-acct even? mul 1 identity 1 inc 4)
-
-(define (square x) (* x x))
-(define (smallest-divisor n)
-  (find-divisor n 2))
-(define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n) n)
-        ((divides? test-divisor n) test-divisor)
-        (else (find-divisor n (+ test-divisor 1)))))
-(define (divides? a b)
-  (= (remainder b a) 0))
-(define (prime? n)
-  (= n (smallest-divisor n)))
-(prime? 100)
-(filter-acct prime? plus 0 identity 1 inc 100)
+(filter-acct even? mul 1 identity 1 inc 4)
+(filter-acct even? plus 0 identity 1 inc 4)

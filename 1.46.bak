@@ -21,4 +21,4 @@
     (iter 1)))
 (define (sqrt-iter2 x)
   ((iterative good-enough? improve) x))
-(sqrt-iter2 16.0)
+(sqrt-iter2 16)

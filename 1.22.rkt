@@ -11,7 +11,6 @@
 (define (prime? n)
   (= n (smallest-divisor n)))
 
-
 (define (timed-prime-test n)
   (newline)
   (display n)
@@ -23,6 +22,4 @@
 (define (report-prime elapsed-time)
   (display " *** ")
   (display elapsed-time))
-;show gcd tree
-(gcd 206 40)
-(gcd 40 6)
+(timed-prime-test 5)
