@@ -1,0 +1,13 @@
+#lang racket
+(define (make-center-percent c p)
+  (make-interval (* c (- 1 p)) (* c (+ 1 p))))
+(define (percent x)
+  (let ((c (center x)))
+    (/ (- (upper-bound x) c) c)))
+
+(define (mul-p x y)
+  (let ((a (percent x))
+        (b (percent y)))
+    (- (* (+ 1 a) (+ 1 b))
+       (* (- 1 a) (- 1 b)))))
+  

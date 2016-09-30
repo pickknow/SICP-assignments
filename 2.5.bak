@@ -14,8 +14,7 @@
   (factor x 2))
 (define (cdr x)
   (factor x 3))
-(define test (cons 2 3))
-(car test)
-(cdr test)
+(car 108)
+(cdr 108)
 
 
