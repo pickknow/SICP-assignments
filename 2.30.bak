@@ -1,6 +1,6 @@
 #lang racket
 (define (square x) (* x x))
-;2.21
+;2.11
 (define (square-list items)
   (if (null? items)
       `()
@@ -11,7 +11,6 @@
   (map square items))
 (square-list (list 1 2 3 4))
 
-;2.30
 (define test (list 1 (list 2 (list 3 ) 5) (list 6 7)))
 (define (square-tree tree f)
   (cond ((null? tree) null)

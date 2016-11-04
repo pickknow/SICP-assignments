@@ -1,27 +1,30 @@
 #lang racket
+(require "lib/lib1.rkt")
 (define test `((1 2 3 4) (4 5 6 6) (6 7 8 9)))
-(define (accumulate op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (car sequence)
-          (accumulate op initial (cdr sequence)))))
-(define (accumulate-n op init seqs)
-  (if (null? (car seqs))
-      `()
-      (cons (accumulate op init  (mapa seqs))
-            (accumulate-n op init (mapb seqs)))))
-(define (mapa seqs)
-  (map (lambda (x)
-         (car x))
-       seqs))
-(define (mapb seqs)
-  (map (lambda (x)
-         (cdr x))
-       seqs))
-(define (map-map op . z)
-  (accumulate-n + 0 z))
-(map-map + `(1 2 3) `(10 20 30) `(100 200 300))
+
+
+
+(define (map-deep op . z)
+  (display z)
+  (let ((initial (mapa z)))
+       ((rest (mapb z)))
+    (display rest)
+       (append (list (list-op op initial))
+               (map-deep op rest))))
+
+
+(map-deep + `(1 2 3) `(10 20 30) `(100 200 300))
+
+(define m (list (list 1 2 3)
+                (list 4 5 6)
+                (list 7 8 9)))
+
+(define v (list 1 2 3 4))
+
 
 (define (dot-product v w)
-  (accumulate + 0 (map-map * v w)))
-(dot-product test test)
+  (accumulate + 0 (map-deep * v w)))
+
+(define (matrix-*-vector m v)
+  (map (lambda(row) (dot-product v row)) m))
+;(matrix-*-vector m v)

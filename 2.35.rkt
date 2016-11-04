@@ -1,22 +1,13 @@
 #lang racket
+(require "lib/lib1.rkt")
 (define testval (list 'a (list 'b 'c 'd 'e) 'f (list 'g 'h (list 'i (list 'j 'k) 'l))))
-testval
-(define (enumerate-tree tree)
-  (cond ((null? tree) `())
-        ((not (pair? tree)) (list tree))
-        (else (append (enumerate-tree (car tree))
-                      (enumerate-tree (cdr tree))))))
-(enumerate-tree testval)
 
-(define (accumulate op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (car sequence)
-          (accumulate op initial (cdr sequence)))))
-(define (length sequence)
-  (accumulate (lambda (x y)
-                (+ 1 y))
-                0 sequence))
+(define (count-leave-original x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leave-original (car x))
+                 (count-leave-original (cdr x))))))
+
 (define (count-leaves t)
   (accumulate
    +
@@ -24,12 +15,4 @@ testval
    (map (lambda (x) 1)
           (enumerate-tree t))
          ))
-(define (count-leavesa t)
-  (accumulate
-   +
-   0
-   (map (lambda (x)
-          (length (enumerate-tree x)))
-        t)))
 (count-leaves testval)
-(count-leavesa testval)
