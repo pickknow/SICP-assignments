@@ -1,17 +1,5 @@
 #lang racket
-(define (accumulate op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (car sequence)
-          (accumulate op initial (cdr sequence)))))
-(define (flatmap proc seq)
-  (accumulate append `() (map proc seq)))
-(define (enumerate-interval a b)
-  (define (iter x r)
-    (if (> x b)
-        r
-        (iter (+ x 1) (append r (list x)))))
-  (iter  a  `()))
+(require "lib/lib1.rkt")
 (define empty-board `())
 (define (adjoin-position row k queens)
   (if (not (pair? queens))
@@ -30,8 +18,7 @@
                                           ((= col (- (cadr x) k-x)) 1)
                                           (else 0))))
                                 (cdr positions))) 0))))
-(define (safe2? k positions)
-  positions)
+
 (define (queens board-size)
   (define (queen-cols k)
     (if (= k 0)
@@ -45,4 +32,5 @@
                  (enumerate-interval 1 board-size)))
           (queen-cols (- k 1))))))
   (queen-cols board-size))
-(queens 8)
+
+(length (queens 8))
