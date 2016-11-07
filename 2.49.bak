@@ -1,0 +1,41 @@
+#lang sicp
+(#%require "lib/painter.rkt")
+(#%require sicp-pict)
+(define (segments->pointer segment-list)
+  (lambda (frame)
+    (for-each
+     (lambda (segment)
+       (draw-line
+        ((frame-coord-map frame) (start-segment segment))
+        ((frame-coord-map frame) (end-segment segment))))
+     segment-list)))
+(define (make-segment v1 v2)
+  (list v1 v2))
+(define start-segment car)
+(define end-segment card)
+
+(define draw-frame-board
+  (segments->pointer (list (make-segment (meke-vect 0 0)
+                                         (make-vect 0 1))                                 
+                           (make-segment (meke-vect 0 1)
+                                         (make-vect 1 1))
+                           (make-segment (meke-vect 0 0 )
+                                         (make-vect 1 0))
+                           (make-segment (meke-vect 1 0 )
+                                         (make-vect 1 1)))))
+(define draw-frame-opposite
+  (segments->pointer (list (make-segment (meke-vect 0 0)
+                                         (meke-vect 1 1))
+                           (make-segment (meke-vect 1 0)
+                                         (meke-vect 0 1)))))
+(define draw-frame-rhombus
+  (segments->pointer (list (make-segment (meke-vect 0.5 0)
+                                         (make-vect 1 0.5))                                 
+                           (make-segment (meke-vect 1 0.5)
+                                         (make-vect 0.5 1))
+                           (make-segment (meke-vect 0.5 1 )
+                                         (make-vect 0 0.5))
+                           (make-segment (meke-vect 0 0.5)
+                                         (make-vect 0.5 0)))))
+(define (wave segments)
+  (segments->pointer segments))

@@ -18,22 +18,7 @@
                                           ((= col (- (cadr x) k-x)) 1)
                                           (else 0))))
                                 (cdr positions))) 0))))
-;以下为另一种计算方法
-(define (adjoin-position new-row k rest-of-queens)
-      (cons new-row rest-of-queens))
-(define (safe? k position)
-  (let ((new (car position)))    
-    (define (iter next-k rest)
-      (cond ((null? rest) #t)
-            (else
-             (let ((check (car rest))
-                   (k-x (- k next-k))) 
-               (cond ((= new check) #f)
-                     ((= check (- new k-x)) #f)
-                     ((= check (+ new k-x)) #f)
-                     (else (iter (- next-k 1) (cdr rest))))))))
-    (iter (- k 1) (cdr position))))
-;
+
 (define (queens board-size)
   (define (queen-cols k)
     (if (= k 0)
@@ -48,4 +33,4 @@
           (queen-cols (- k 1))))))
   (queen-cols board-size))
 
-(length (queens 4))
+(length (queens 8))

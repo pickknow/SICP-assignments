@@ -1,6 +1,6 @@
 #lang sicp
+(#%require "../../racket/lib/lib1.rkt")
 (#%require sicp-pict)
-
 (define (make-frame origin edge1 edge2)
   (list origin edge1 edge2))
 (define origin car)
@@ -12,13 +12,3 @@
 (define origin-cons car)
 (define edge1-cons cadr)
 (define edge2-cons cddr)
-
-(define a (make-frame 1 2 3))
-(origin a)
-(edge1 a)
-(edge2 a)
-
-(define b (make-frame-cons 1 2 3))
-(origin-cons b)
-(edge1-cons b)
-(edge2-cons b)
