@@ -1,3 +1,0 @@
-#lang sicp
-(#%require "../../racket/lib/lib1.rkt")
-(#%require sicp-pict)

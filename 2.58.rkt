@@ -1,20 +1,13 @@
 #lang racket
-(define (variable? x) (symbol? x))
-(define (same-variable? v1 v2)
-  (and (variable? v1)
-       (variable? v2)
-       (eq? v1 v2)))
+(require "lib/qiudao.rkt")
 (define (sum? x)
   (and (pair? x) (eq? (cadr x) `+)))
 (define (product? x)
   (and (pair? x) (eq? (cadr x) `*)))
 
-
-(define (=number? exp num)
-  (and (number? exp) (= exp num)))
 ;sum
 (define addend car)
-(define augend caddr)
+
 (define (make-sum x y)
   (cond ((=number? x 0) y)
         ((=number? y 0) x)
@@ -22,22 +15,13 @@
         (else (list x `+  y))))
 ;product
 (define multiplier car)
-(define multiplicand caddr)
+
 (define (make-product x y)
   (cond ((or(=number? x 0) (=number? y 0)) 0)
         ((=number? x 1) y)
         ((=number? y 1) x)
         ((and (number? x) (number? y)) (* x y))
         (else (list x `*  y))))
-(define (exponentiation? exp)
-  (and (pair? exp) (eq? (car exp) `**)))
-(define base cadr)
-(define exponent caddr)
-(define (make-exponetiation base exponent)
-  ;(display base) (display exponent)
-  (cond ((=number? exponent 1) base)
-        ((=number? exponent 0) 1)
-        (else (list `** base exponent))))
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp)
@@ -51,23 +35,22 @@
          (make-product (multiplier exp)
                        (deriv (multiplicand exp) var))
          (make-product (deriv (multiplier exp) var)
-                       (multiplicand exp))))
-        ((exponentiation? exp)
-         (make-product
-          (make-product
-           (exponent exp)
-           (make-exponetiation (exponent exp)
-                               `(- ,(base exp) 1)))
-          
-          (deriv (base exp) var)))
+                       (multiplicand exp))))  
         (else
          (error "unkonw expression type --DERIV" exp))))
-;(deriv `(+ x 3) `x)
-;(deriv `(x * y) `x)
-;(deriv '(** (* x y) 6) 'x)
-;(deriv `(** x y) `x)
-;(deriv `(+ x (* 3 (+ x (+ y 2)))) `x)
-;(deriv `(x + 3) `x)
-;(cdr `(x + 3))
-
-(deriv `(x + (3 * (x + (y + 2)))) `x)
+(define (multiplicand m)
+    (let ((rest (cddr m)))
+    (if (null? (cdr rest))
+         (car rest)
+         rest
+       )))
+(define (augend m)
+  (let ((rest (cddr m)))
+    (if (null? (cdr rest))
+         (car rest)
+         rest
+       )))
+(define a `(x * (y * (x + 3))))
+(define b `(x + 3 * (x + y + 2)))
+(define c `(x + y + 2))
+(deriv a `x)

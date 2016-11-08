@@ -1,34 +1,14 @@
-#lang racket
-(define (flipped-pairs painter)
-  (let ((painter2 (beside painter (flip-vert painter))))
-    (below painter2 painter2)))
-(define wave4 (flipped-pairs wave))
-(define (make-frame origin edge1 edge2)
-  (list origin edge1 edge2))
-(define (segment->painter segment-list)
-  (lambda (frame)
-    (for-each
-     (lambda (segment)
-       (draw-line
-        ((frame-coord-map frame) (start-segment segment))
-        ((frame-coord-map frame) (end-segment segment))))
-  segment-list)))
-(define (frame-coord-map frame)
-  (lambda (v)
-    (add-vect
-     (origin-frame frame)
-     (add-vect (scale-vect (xcor-vect v)
-                           (edge1-frame frame))
-               (scale-vect (ycor-vect v)
-                           (edge2-frame frame))))))
-(define (transform-painter painter origin corner1 conner2)
+#lang sicp
+(#%require sicp-pict)
+(#%require "lib/painter.rkt")
+(define (transform-painter painter origin corner1 corner2)
   (lambda (frame)
     (let ((m (frame-coord-map frame)))
       (let ((new-origin (m origin)))
         (painter
          (make-frame new-origin
-                     (sub-vect (m conner1) new-origin)
-                     (sub-vect (m conner2) new-origin)))))))
+                     (sub-vect (m corner1) new-origin)
+                     (sub-vect (m corner2) new-origin)))))))
 (define (flip-vect painter)
   (transform-painter painter
                      (make-vect 0.0 1.0)
@@ -39,41 +19,42 @@
                      (make-vect 0.5 0.5)
                      (make-vect 1 0.5)
                      (make-vect 0.5 1)))
-(defeine (rotate90 painter)
+(define (rotate90 painter)
   (transform-painter painter
                      (make-vect 1 0)
                      (make-vect 1 1)
                      (make-vect 0 0)))
-(defeine (squash-inwards painter)
+(define (squash-inwards painter)
   (transform-painter painter
                      (make-vect 0 0)
                      (make-vect 0.65 0.35)
                      (make-vect 0.35 0.65)))
 (define (beside painter1 painter2)
-  (let ((split-point (make-point 0.5 0.5)))
+  (let ((split-point (make-vect 0.5 0.5)))
     (let ((paint-left
-           (transform painter1 (make-vect 0 0)
+           (transform-painter painter1 (make-vect 0 0)
                       split-point
                       (make-vect 0 1)))
           (paint-right
-           (transform painter2 split-point
+           (transform-painter painter2 split-point
                       (make-vect 1 0)
                       (make-vect 0.5 1))))
       (lambda (frame)
         (paint-left frame)
         (paint-right frame)))))
 (define (flip-horzi painter)
-  (transform-painter painter (make-vect 1 0)
+  (transform-painter painter
+                     (make-vect 1 0)
                      (make-vect 0 0)
                      (make-vect 1 1)))
 (define (below painter1 painter2)
-  (let ((split-point (make-point 0.5 0.5)))
-    (let ((below-paint (transform painter1 (make-vect 0 0)
-                                  (make-vect 1 1)
-                                split-point))
-          (top-paint (transform painter2 split-point
-                                (make-vect 1 1)
-                                (make-vect 0 1))))
+  (let ((split-point (make-vect 0.5 0.5)))
+    (let ((below-paint (transform-painter painter1 (make-vect 0 0)
+                                          (make-vect 1 1)
+                                          split-point))
+          (top-paint (transform-painter painter2 split-point
+                                        (make-vect 1 1)
+                                        (make-vect 0 1))))
       (lambda (frame)
         (below-paint frame)
         (top-paint frame)))))

@@ -1,4 +1,6 @@
-#lang racket
+#lang sicp
+(#%require sicp-pict)
+(#%require "lib/painter.rkt")
 (define (memq item x)
   (cond ((null? x) false)
         ((eq? item (car x)) x)
@@ -12,5 +14,5 @@
 ;(y1 y2)
 (pair? (car `(a short list)))
 ;#f
-(memq `apple `(x (apple sauce) y apple pear))
 (memq `red `((red shoes) (blue socks)))
+(memq `red `(red shoes blue))

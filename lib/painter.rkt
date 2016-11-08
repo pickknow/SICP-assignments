@@ -61,21 +61,12 @@
 (define xcor-vect car)
 (define ycor-vect cdr)
 
-(define (add-vect v1 v2)
-  (make-vect (+ (xcor-vect v1)
-                (xcor-vect v2))
-             (+ (ycor-vect v1)
-                (ycor-vect v2))))
-
-(define (sub-vect v1 v2)
-  (make-vect (- (xcor-vect v1)
-                (xcor-vect v2))
-             (- (ycor-vect v1)
-                (ycor-vect v2))))
-
-(define (scale-vect v s)
-  (make-vect (* (xcor-vect v) s)
-             (* (ycor-vect v) s)))
+(provide add-vect)
+(define add-vect vector-add)
+(provide sub-vect)
+(define sub-vect vector-sub)
+(provide scale-vect)
+(define scale-vect vector-scale)
 
 ;(provide frame-coord-map)
 (define (frame-coord-map frame)
