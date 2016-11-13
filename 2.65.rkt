@@ -6,8 +6,8 @@
   (list entry left right))
 
 (define (element-of-set? x set)
-  (cond ((null? set) false)
-        ((= x (entry set) true))
+  (cond ((null? set) #f)
+        ((= x (entry set)) #t)
         ((< x (entry set))
          (element-of-set? x (left-branch set)))
         ((> x (entry set))
@@ -22,12 +22,6 @@
         ((> x (entry set))
          (make-tree (entry set)
                     (adjoin-set x (right-branch set))))))
-(define (tree->list-1 tree)
-  (if (null? tree)
-      `()
-      (append (tree->list-1 (left-branch tree))
-              (cons (entry tree)
-                    (tree->list-1 (right-branch tree))))))
 
 (define (list->tree elements)
   (car (partial-tree elements (length elements))))
@@ -76,7 +70,7 @@
         (cond ((= x1 x2) (make-tree x1
                                     (union-set (left-branch s1)
                                                (left-branch s2))
-                                    (union-set (right-branch s1)
+                                    (union-set (right-branch k1)
                                                (right-branch s2))))
               ((< x1 x2) (union-set (right-branch s1)
                                      (make-tree x2
