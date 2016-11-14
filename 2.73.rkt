@@ -1,4 +1,5 @@
 #lang racket
+(require "lib/table.rkt")
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var ) 1 0))
@@ -7,7 +8,7 @@
 (define operator car)
 (define operands cdr)
 
-(define (install-deriv)  
+(define (install-deriv)
   (define (make-sum x y)
     (cond ((=number? x 0) y)
           ((=number? y 0) x)
@@ -19,7 +20,9 @@
           ((=number? y 1) x)
           ((and (number? x) (number? y)) (* x y))
           (else (list `* x y))))
-  (put `+ `(deriv) make-sum)
-  (put `* `(deriv) make-product))
-   (put `deriv `(+) make-sum)
-  (put `deriv `(*) make-product)
+(put `deriv `+  make-sum)
+(put `deriv `*  make-product)
+  `done)
+(install-deriv)
+(deriv `(+ x 3) `x)
+
