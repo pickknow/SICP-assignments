@@ -1,7 +1,4 @@
 #lang racket
-(define (scheme-nimber->complex n)
-  (make-complex-from-real-imag (contents n) 0))
-(put-coercoin `scheme-number `complex scheme->number->complex)
 (define (apply-generic op .args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -12,7 +9,7 @@
                     (type2 (cadr type-tags))
                     (a1 (car args))
                     (a2 (cadr args)))
-                (if (not (eq? type1 type2))                    
+                (if (not (eq? type1 type2))
                     (let ((t1->t2 (get-coercoin type1 type2))
                           (t2->t1 (get-coercoin type2 type1)))
                       (cond (t1->t2

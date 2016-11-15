@@ -1,27 +1,4 @@
 #lang racket
-(define (attach-tag type-tag contents)
-  (if (eq? type-tag `scheme-number) 
-      contents
-      (cons type-tag contents)))
-(define (type-tag datum)
-  (cond ((number? datum) datum)
-        ((pair? datum) (car datum))
-        (else 
-         (error "Bad tagged datum --TYPE-TAG" datum))))
-(define (contents datum)
-  (cond ((number? datum) datum)
-        ((pair? datum) (cdr datum))
-        (else
-         (error "Bad tagged datum -- CONTENTS" datum))))
-(define (apply-generic op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-          (apply proc (map contents args))
-          (error
-           "No method for these types --APPLY-GENERIC"
-           (list op type-tags))))))
-(define (add x y) (apply-generic `add x y))
 (define (sub x y) (apply-generic `sub x y))
 (define (mul x y) (apply-generic `mul x y))
 (define (div x y) (apply-generic `div x y))
@@ -40,7 +17,7 @@
   (put `=zero? `(scheme-number scheme-number)
        (lambda (x y) (and (= x 0) (= y 0))))
   `done)
-
-(define (make-scheme-number n)
-  ((get `make `scheme-number n)))
+;and so on others
+(define (equ? x)
+ (apply-generic (type-tag x) (contents x)))
 

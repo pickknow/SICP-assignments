@@ -1,7 +1,14 @@
 #lang racket
-(define (scheme-nimber->complex n)
-  (make-complex-from-real-imag (contents n) 0))
-(put-coercoin `scheme-number `complex scheme->number->complex)
+(define (up-who? type1 type2)
+  (define (type-val t)
+   (cond ((eq? t `scheme-number) 0)
+         ((eq? t `rational) 1)
+         ((eq? t `real) 2)
+         ((eq? t `complex) 3)
+         (else (error "NO SUCH TYPE" t))))
+  (- (type-val type1) (type-val type2)))
+
+
 (define (apply-generic op .args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -12,25 +19,11 @@
                     (type2 (cadr type-tags))
                     (a1 (car args))
                     (a2 (cadr args)))
-                (if (not (eq? type1 type2))
-                    (let ((who-up (up-who? type1 typp2)))
-                      (cond ((eq?  who-up type1)
-                             (apply-generic op ((get `raise type1) a1) a2))
-                            ((eq?  who-up type2)
-                             (apply-generic op a1 ((get `raise type2) a2)))                             
-                            (else
-                             (error "No method for these types"
-                                    (list op type-tags)))))
-                    (error "No method for these types"
-                           (list op type-tags))))
+                    (let ((who-up (up-who? type1 type2)))
+                     (cond ((> who-up 0) (apply-generic op a1 (raise a2)))
+                           ((< who-up 0) (apply-generic op (raise a1) a2))
+                           (else (apply-generic op a1 a2))))))
                 (error "No method for these types"
-                       (list op type-tags)))))))
+                       (list op type-tags))))))
 
-(define (raise x)
-  (let ((type type-tag x))
-    (if (eq? type `complex)
-        false
-        (let ((proc (get `raise type)))
-          (if proc
-              (apply proc (contents x))
-              false)))))
+

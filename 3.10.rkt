@@ -1,7 +1,7 @@
 #lang racket
 (define (squaer x)
   (* x x))
-(define (sum-of-squares x y)
-  (+ (square x) (square y)))
+(define (sum-of-sqrs x y)
+  (+ (sqr x) (sqr y)))
 (define (f a)
-  (sum-if-squares (+ a 1) (+ a 2)))
+  (sum-if-sqrs (+ a 1) (+ a 2)))
