@@ -1,4 +1,4 @@
-#lang racket
+#lang planet neil/sicp
 (define (assoc key records)
   (cond ((null? records) false)
         ((equal? key (caar records)) (car records))
@@ -33,7 +33,7 @@
             (else
              (error "Unkonw operation --TABLE" m))))
     dispatch))
-(define (same-key? eq key records)
+(define (same-key?  key records)
   (cond ((null? records) false)
         ((eq? key (caar records)) (car records))
         (else (same-key? key (cdr records)))))
