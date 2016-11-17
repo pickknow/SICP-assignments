@@ -21,7 +21,7 @@
                   (set-cdr! record value)
                   (set-cdr! subtable
                             (cons (cons key-2 value)
-                                  (cdr subtalbe)))))
+                                  (cdr subtable)))))
             (set-cdr! local-table
                       (cons (list key-1
                                   (cons key-2 value))
@@ -55,7 +55,7 @@
                   (set-cdr! record value)
                   (set-cdr! subtable
                             (cons (cons key-2 value)
-                                  (cdr subtalbe)))))
+                                  (cdr subtable)))))
             (set-cdr! local-table
                       (cons (list key-1
                                   (cons key-2 value))

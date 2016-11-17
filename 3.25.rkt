@@ -43,7 +43,7 @@
     (set-cdr! table
               (cons new-record (cdr table))))
 
-(define a (make-table))
-(insert! `(a b c) 1 a)
-(lookup `(a b c) a)        
+;(define a (make-table))
+;(insert! `(a b c) 1 a)
+;(lookup `(a b c) a)        
         
