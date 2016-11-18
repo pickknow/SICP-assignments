@@ -1,3 +1,34 @@
-;100
-;11
-;121
+#lang racket
+(require (planet dyoo/sicp-concurrency:1:2/sicp-concurrency))
+(define (parallel-execute1 . thunks)  
+  (for-each thread thunks))  
+ (define (parallel-execute2 . procs)
+  (map thread-wait
+       (map (lambda (proc) (thread proc))
+            procs)))
+(define (make-serializer)
+  (let ((mutex (make-mutex)))
+    (lambda (p)
+      (define (serialized-p . args)
+        (mutex 'acquire)
+        (let ((val (apply p args)))
+          (mutex 'release)
+          val))
+      serialized-p)))
+(define x 10)  
+  
+(parallel-execute2 (lambda () (set! x (* x x)))  
+                  (lambda () (set! x (+ x 1))))  
+(display x)  
+(newline)  
+(display x)  
+(newline)  
+(display x)  
+(newline)  
+(display x)  
+(newline)  
+(display x)  
+(newline)  
+(display x)  
+(newline)  
+(display x)  
