@@ -16,6 +16,8 @@
   (zip-map * s1 s2))
 (define (div-streams s1 s2)
   (zip-map / s1 s2))
+(define (scale-stream stream factor)
+  (stream-map (lambda (x) (* x factor)) stream))
 
 (define (integers-starting-from n)
   (stream-cons n (integers-starting-from (+ n 1))))
@@ -39,10 +41,12 @@
                (stream-step (stream-cdr (stream-cdr exp-series))))))
 
                
+(define (mul-series s1 s2)
+  (stream-cons (* (stream-car s1) (stream-car s2))
+               (add-streams
+                (add-streams (scale-stream (stream-cdr s1) (stream-car s2))
+                             (scale-stream (stream-cdr s2) (stream-car s1)))
+                (stream-cons 0 (mul-series (stream-cdr s1) (stream-cdr s2))))))
 
 
-(stream-ref cosine-series 0)
-(stream-ref cosine-series 1)
-(stream-ref cosine-series 2)
-(stream-ref cosine-series 3)
-(stream-ref cosine-series 4) 
+               

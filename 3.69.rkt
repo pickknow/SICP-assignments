@@ -24,14 +24,20 @@
 (define (integers-starting-from n)
   (stream-cons n (integers-starting-from (+ n 1))))
 (define integers (integers-starting-from 1))
-
-(define (pairs2 s t)
+(define (pairs s t)
   (stream-cons
    (list (stream-car s) (stream-car t))
    (interleave
     (stream-map (lambda (x) (list (stream-car s) x))
                 (stream-cdr t))
-    (pairs2 (stream-cdr s) t))))
-
-(define a (pairs2 integers integers))
-(stream-top a 10)
+    (pairs (stream-cdr s) (stream-cdr t)))))
+(define (triples s t u)
+  (stream-cons
+   (list (stream-car s) (stream-car t) (stream-car u))
+   (interleave
+    (stream-map (lambda (x) (cons (stream-car s) x))
+                (pairs t (stream-cdr u)))
+    (triples (stream-cdr s) (stream-cdr t) (stream-cdr u)))))
+(define a (triples integers integers integers))
+(stream-top  a 10)
+               

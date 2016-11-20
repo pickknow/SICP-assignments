@@ -1,0 +1,56 @@
+#lang racket
+(provide stream-car)
+(define (stream-car s) (car s))
+(provide stream-cdr)
+(define (stream-cdr s) (force (cdr s)))
+(provide stream-null?)
+(define (stream-null? s) (null? s))
+(provide the-empty-stream)
+(define the-empty-stream `())
+(provide stream-for-each)
+(define (stream-for-each proc s)
+  (if (stream-null? s)
+      'done
+      (begin (proc (stream-car s))
+             (stream-for-each proc (stream-cdr s)))))
+(provide display-stream)
+(define (display-stream s)
+  (stream-for-each display-line s))
+(provide display-line)
+(define (display-line x)
+  (newline)
+  (display x))
+(provide stream-filter)
+(define (stream-filter pred stream)
+  (cond ((stream-null? stream) the-empty-stream)
+        ((pred (stream-car stream))
+         (stream-cons (stream-car stream)
+                      (stream-filter pred
+                                     (stream-cdr stream))))
+        (else (stream-filter pred (stream-cdr stream)))))
+(provide memo-proc)
+(define (memo-proc proc)
+  (let ((already-run? #f) (result #f))
+    (lambda ()
+      (if (not already-run?)
+          (begin (set! result (proc))
+                 (set! already-run? #t)
+                 result)
+          result))))
+(provide stream-enumerate-interval)
+(define (stream-enumerate-interval low high)
+  (if (> low high)
+      the-empty-stream
+      (stream-cons
+       low
+       (stream-enumerate-interval (+ low 1) high))))
+
+(define (scale-stream stream factor)
+  (stream-map (lambda (x) (* x factor)) stream))
+(define (zip-map proc . agrstreams)
+  (if (null? (car agrstreams))
+      the-empty-stream
+      (stream-cons
+       (apply proc (map stream-car agrstreams))
+       (apply zip-map
+              (cons proc (map stream-cdr agrstreams))))))

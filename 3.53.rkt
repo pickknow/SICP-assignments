@@ -1,20 +1,16 @@
-(defne (integers-strating-from n)
-  (cons-stream n (inter-starting-from (+ n 1))))
-(define integers (integers-starting-from 1))
-(define (divisible? x y) (= (remainder x y) 0))
-(define no-sevens
-  (stream-filter (lambda (x) (not (divesible? x 7)))
-                 integers))
-(define (sieve stream)
-  (cons-stream
-   (stream-car stream)
-   (sieve (stream-filter
-           (lambda (x)
-             (not (divsible? x (stream-car stream))))
-           (stream-cdr stream)))))
-(define ones (cons-stream 1 ones))
+#lang racket
+(define the-empty-stream empty-stream)
+(define stream-null? stream-empty?)
+(define stream-car stream-first)
+(define stream-cdr stream-rest)
+(define (zip-map proc . agrstreams)
+  (if (null? (car agrstreams))
+      the-empty-stream
+      (stream-cons
+       (apply proc (map stream-car agrstreams))
+       (apply zip-map
+              (cons proc (map stream-cdr agrstreams))))))
 (define (add-streams s1 s2)
-  (stream-map + s1 s2))
-(define integers1 (cons-stream 1 (add-streams ones integers1)))
-(define (scale-stream stream factor)
-  (stream-map (lambda (x) (* x factor)) stream))
+  (zip-map + s1 s2))
+(define s (stream-cons 1 (add-streams s s)))
+`(1 2 4 8 16 ) ;......

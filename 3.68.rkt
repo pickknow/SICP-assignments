@@ -25,13 +25,12 @@
   (stream-cons n (integers-starting-from (+ n 1))))
 (define integers (integers-starting-from 1))
 
-(define (pairs2 s t)
-  (stream-cons
-   (list (stream-car s) (stream-car t))
+(define (pairs s t)
    (interleave
     (stream-map (lambda (x) (list (stream-car s) x))
-                (stream-cdr t))
-    (pairs2 (stream-cdr s) t))))
+                t)
+    (pairs (stream-cdr s) (stream-cdr t))))
 
-(define a (pairs2 integers integers))
-(stream-top a 10)
+(define a (pairs integers integers))
+(stream-ref a 0)
+;(stream-top a 10)

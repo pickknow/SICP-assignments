@@ -24,14 +24,37 @@
 (define (integers-starting-from n)
   (stream-cons n (integers-starting-from (+ n 1))))
 (define integers (integers-starting-from 1))
-
-(define (pairs2 s t)
+(define (pairs s t)
   (stream-cons
    (list (stream-car s) (stream-car t))
    (interleave
     (stream-map (lambda (x) (list (stream-car s) x))
                 (stream-cdr t))
-    (pairs2 (stream-cdr s) t))))
+    (pairs (stream-cdr s) (stream-cdr t)))))              
+(define (W x y)
+  (- (+ (car x) (cdr x))
+     (+ (car y) (cdr y))))
 
-(define a (pairs2 integers integers))
+(define (merge-weighted s1 s2 f)
+  (cond ((stream-null? s1) s2)
+        ((stream-null? s2) s1)
+        (else
+         (let* ((s1car (stream-car s1))
+               (s2car (stream-car s2))
+               (result (f s1car s2car)))
+           (cond ((< result 0)
+                   (stream-cons s1car (merge-weighted (stream-cdr s1) s2 f)))
+                 (else
+                  (stream-cons s2car (merge-weighted s1 (stream-cdr s2) f)))
+                 )))))
+
+(define (weighted-pairs s t f)
+  (stream-cons
+   (cons (stream-car s) (stream-car t))
+   (merge-weighted    
+    (stream-map (lambda (x) (cons (stream-car s) x))
+                (stream-cdr t))
+    (weighted-pairs (stream-cdr s) (stream-cdr t) f)
+    f)))
+(define a (weighted-pairs integers integers W))
 (stream-top a 10)
