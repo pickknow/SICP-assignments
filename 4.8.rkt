@@ -19,14 +19,22 @@
   ((make-lambda (let-variables exp)
                 (let-body exp))
    (let-values exp)))
-(define (named-let exp)
-  (list `let (list (cadr exp)
-                   (
 
-(define (fib n)
-  (let fib-iter ((a 1)
-                 (b 0)
-                 (count n))
-    (if (= count 0)
-        b
-        (fib-iter (+ a b) a (- count 1)))))
+(define name-let-var cadr)
+(define name-let-bindings caddr)
+(define name-let-body cddd)
+
+(define (name-let-vars exp)
+  (map car (name-let-bindings)))
+(define (name-let-value exp)
+  (map cadr (name-let-bindings)))
+(define (named-let exp)  
+  (list `define (name-let-var exp)
+                (make-lambda (name-let-value exp)
+                             (name-let-body)))
+  ((name-let-var exp) name-let-value))
+
+(define (let->lambda exp)
+  (if (named-let? exp)
+      (named-let exp)
+      (let->lambda-normal exp)))
