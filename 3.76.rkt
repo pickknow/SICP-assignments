@@ -31,12 +31,6 @@
         ((and (< x 0) (>= y 0)) 1)
         (else 0)))
 
-(define (make-zero-crossings input-stream last-value)
-  (stream-cons
-   (sign-change-detector (stream-car input-stream) last-value)
-   (make-zero-crossings (stream-cdr input-stream)
-                        (stream-car input-stream))))
-
 (define sense-data
   (stream-cons 1 (stream-map - sense-data)))
 

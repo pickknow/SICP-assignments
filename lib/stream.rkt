@@ -1,18 +1,41 @@
 #lang racket
-(provide stream-car)
-(define (stream-car s) (car s))
-(provide stream-cdr)
-(define (stream-cdr s) (force (cdr s)))
-(provide stream-null?)
-(define (stream-null? s) (null? s))
 (provide the-empty-stream)
-(define the-empty-stream `())
-(provide stream-for-each)
-(define (stream-for-each proc s)
-  (if (stream-null? s)
-      'done
-      (begin (proc (stream-car s))
-             (stream-for-each proc (stream-cdr s)))))
+(define the-empty-stream empty-stream)
+(provide stream-null?)
+(define stream-null? stream-empty?)
+(provide stream-car)
+(define stream-car stream-first)
+(provide stream-cdr)
+(define stream-cdr stream-rest)
+(provide zip-map)
+(define (zip-map proc . agrstreams)
+  (if (null? (car agrstreams))
+      the-empty-stream
+      (stream-cons
+       (apply proc (map stream-car agrstreams))
+       (apply zip-map
+              (cons proc (map stream-cdr agrstreams))))))
+(provide add-streams)
+(define (add-streams s1 s2)
+  (zip-map + s1 s2))
+(provide mul-streams)
+(define (mul-streams s1 s2)
+  (zip-map * s1 s2))
+(provide scale-streams)
+(define (scale-streams s fac)
+  (stream-map (lambda (x) (* x fac)) s))
+(define (integers-starting-from n)
+  (stream-cons n (integers-starting-from (+ n 1))))
+(provide integers)
+(define integers (integers-starting-from 1))
+(provide stream-top)
+(define (stream-top s n)
+  (if (< n 0)
+      (displayln `done)
+      (begin
+        (displayln (stream-car s))
+        (stream-top (stream-cdr s) (- n 1)))))
+
 (provide display-stream)
 (define (display-stream s)
   (stream-for-each display-line s))
@@ -20,14 +43,7 @@
 (define (display-line x)
   (newline)
   (display x))
-(provide stream-filter)
-(define (stream-filter pred stream)
-  (cond ((stream-null? stream) the-empty-stream)
-        ((pred (stream-car stream))
-         (stream-cons (stream-car stream)
-                      (stream-filter pred
-                                     (stream-cdr stream))))
-        (else (stream-filter pred (stream-cdr stream)))))
+
 (provide memo-proc)
 (define (memo-proc proc)
   (let ((already-run? #f) (result #f))
@@ -45,12 +61,3 @@
        low
        (stream-enumerate-interval (+ low 1) high))))
 
-(define (scale-stream stream factor)
-  (stream-map (lambda (x) (* x factor)) stream))
-(define (zip-map proc . agrstreams)
-  (if (null? (car agrstreams))
-      the-empty-stream
-      (stream-cons
-       (apply proc (map stream-car agrstreams))
-       (apply zip-map
-              (cons proc (map stream-cdr agrstreams))))))

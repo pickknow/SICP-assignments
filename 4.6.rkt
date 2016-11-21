@@ -1,0 +1,22 @@
+#lang racket
+(require "lib/eval.rkt")
+(define (let? exp)
+  (tagged-list? exp `let))
+(define (let-varibales exp)
+  (cadr exp))
+(define (let-body exp)
+  (cddr exp))
+(define (let-bindings exp)
+  (cadr exp))
+(define (let-variables exp)
+  (map car (let-bindings exp)))
+(define (make-let bindings body)
+  (list 'let bindings body))
+(define (let-values exp)
+  (map cadr (let-bindings exp)))
+(define (let->lambda exp)
+  ((make-lambda (let-variables exp)
+                (let-body exp))
+   (let-values exp)))
+
+
