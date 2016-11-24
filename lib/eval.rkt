@@ -34,6 +34,10 @@
         (else
          (error
           "Unknown procedure type -- APPLY" procedure))))
+(define (true? x)
+  (not (eq? x false)))
+(define (false? x)
+  (eq? x false))
 (define (list-of-values exps env)
   (if (no-operands? exps)
       '()
@@ -167,10 +171,7 @@
           body
           (iter (list `let (list (car lets)) (iter (cdr lets))))))
     (iter inits)))
-(define (true? x)
-  (not (eq? x false)))
-(define (false? x)
-  (eq? x false))
+
 (define (make-procedure parameters body env)
   (list 'procedure parameters body env))
 (define (compound-procedure? p)
@@ -235,7 +236,18 @@
 
 
 ;4.14
-
+(define primitive-procedures
+  (list (list 'car car)
+        (list 'cdr cdr)
+        (list 'cons cons)
+        (list 'null? null?)
+        ))
+(define (primitive-procedure-names)
+  (map car
+       primitive-procedures))
+(define (primitive-procedure-objects)
+  (map (lambda (proc) (list 'primitive (cadr proc)))
+       primitive-procedures))
 (define (setup-environment)
   (let ((initial-env
          (extend-environment (primitive-procedure-names)
@@ -248,19 +260,9 @@
 (define (primitive-procedure? proc)
   (tagged-list? proc 'primitive))
 (define (primitive-implementation proc) (cadr proc))
-(define primitive-procedures
-  (list (list 'car car)
-        (list 'cdr cdr)
-        (list 'cons cons)
-        (list 'null? null?)
-        ))
 
-(define (primitive-procedure-names)
-  (map car
-       primitive-procedures))
-(define (primitive-procedure-objects)
-  (map (lambda (proc) (list 'primitive (cadr proc)))
-       primitive-procedures))
+
+
 
 (define (apply-primitive-procedure proc args)
   (apply-in-underlying-scheme
