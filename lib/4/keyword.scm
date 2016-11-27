@@ -47,6 +47,7 @@
 
 
 (define (eval-sequence exps env)
+ (display exps)
   (cond ((last-exp? exps) (eval (first-exp exps) env))
         (else (eval (first-exp exps) env)
               (eval-sequence (rest-exps exps) env))))
@@ -73,3 +74,85 @@
   (if (true? result)
       result
       (eval (and-second exp) env))))
+
+(define (let? exp) (tagged-list? exp `let))
+(define (let-special? exp) (symbol? (cadr exp)))
+(define (let-special-name exp)(cadr exp))
+(define (let-list exp)
+  (if (let-special? exp)
+      (caddr exp)
+      (cadr exp)))
+(define (let-body exp)
+  (if (let-special? exp)
+      (cadddr exp)
+      (cddr exp)))
+(define (let-variables exp)
+  (map car (let-list exp)))
+(define (let-values exp)
+  (map cadr (let-list exp)))
+(define (make-let-normal exp)
+     (cons (make-lambda
+   		(let-variables exp)
+		(let-body exp))
+	(let-values exp)))
+
+(define (make-let-named exp)
+  (list `let (let-list exp)
+        (list `define (cons (let-special-name exp)
+                            (let-variables exp))
+              (let-body exp))
+        (cons (let-special-name exp) (let-variables exp))))
+
+(define (make-let-named2 expression)
+  (let* ((var-name (cadr expression))
+         (let-list (caddr expression))
+         (arg-list (map car let-list))
+         (arg-init (map cadr let-list))
+         (let-body (cdddr expression)))
+    (list 'let
+          (list (list var-name
+                      (make-lambda arg-list let-body)))
+          (cons var-name arg-init))))
+
+(define (let->combination exp)
+  (if (let-special? exp)
+      (make-let-named exp)
+      (make-let-normal exp)))
+
+
+
+(define (let*? exp) (tagged-list? exp `let*))
+(define let*-binding cadr)
+(define let*-body cddr)
+(define (let*->nested-lets exp)
+  (let ((vars (let*-binding exp)))
+    (define (make-let* var-list)
+      (if (null? (cdr var-list))
+          (append (list `let)
+                  (list (list (car var-list)))
+                  (let*-body exp))
+          (list `let
+                (list (car var-list))
+                (make-let* (cdr var-list)))))
+    (make-let* (let*-binding exp))))
+
+(define (for? exp) (tagged-list? exp `for))
+(define (for-init exp) (cadr exp))
+(define (for-cond exp) (caddr exp))
+(define (for-change exp) (cadddr exp))
+(define (for-body exp) (car (cddddr exp)))
+(define (for->combination exp)
+  (cons `begin (list (for-init exp)
+        (list `define (list `for-iter)
+              (make-if (for-cond exp)
+                       (cons `begin (list (for-body exp)
+                                          (for-change exp)
+                                          (list `for-iter)))
+                       `true))
+        (list `for-iter))))
+
+(define (unbound? exp) (tagged-list? exp `unbound!))
+(define (unbond-var exp) (cadr exp))
+(define (eval-unbound exp env)
+  (make-unbound! (unbond-var exp) env))
+
