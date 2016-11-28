@@ -36,7 +36,7 @@
                 (lambda (env-loop var val env vars vals)
                   (env-loop (enclosing-environment env)))
                 (lambda (env-loop var val env vars vals)
-                  (if (eq? *unassigned* (car vals))
+                  (if (eq? '*unassigned* (car vals))
                       (error "Unassigned" val)
                       (car vals)))))
 

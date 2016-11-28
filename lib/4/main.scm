@@ -21,6 +21,7 @@
         ((and? exp) (eval-and exp env))
         ((or? exp) (eval-or exp env))
         ((for? exp) (eval (for->combination exp) env))
+        ((letrec? exp) (eval (letrec->exp exp) env))
         ((application? exp)
          (apply (eval (operator exp) env)
                 (list-of-values (operands exp) env)))
@@ -38,7 +39,7 @@
              (procedure-environment procedure))))
         (else
          (error
-          "Unknown procedure type -- APPLY" procedure))))
+          "Unknown procedure type -- APPLY" (list procedure arguments)))))
 (define (list-of-values exps env)
   (if (no-operands? exps)
       '()
