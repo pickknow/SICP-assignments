@@ -17,7 +17,7 @@
          (eval-sequence (begin-actions exp) env))
         ((cond? exp) (eval (cond->if exp) env))
         ((let? exp) (eval (let->combination exp) env))
-        ((let*? exp) (eval (let*->nested-lets exp) env))        
+        ((let*? exp) (eval (let*->nested-lets exp) env))
         ((and? exp) (eval-and exp env))
         ((or? exp) (eval-or exp env))
         ((for? exp) (eval (for->combination exp) env))
