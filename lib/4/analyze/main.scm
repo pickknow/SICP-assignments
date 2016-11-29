@@ -2,11 +2,12 @@
 (load "keyword.scm")
 (load "builtin.scm")
 (load "analyzer.scm")
+
 (define (eval exp env)
   ((analyze exp) env))
+
 (define (analyze exp)
-  (cond ((self-evaluating? exp)
-         (analyze-self-evaluating exp))
+  (cond ((self-evaluating? exp) (analyze-self-evaluating exp))
         ((quoted? exp) (analyze-quoted exp))
         ((variable? exp) (analyze-variable exp))
         ((assignment? exp) (analyze-assignment exp))
@@ -15,9 +16,9 @@
         ((lambda? exp) (analyze-lambda exp))
         ((begin? exp) (analyze-sequence (begin-actions exp)))
         ((cond? exp) (analyze (cond->if exp)))
+        ((let? exp) (analyze (let->combination exp)))
         ((application? exp) (analyze-application exp))
-        (else
-         (error "Unknown expression type -- ANALYZE" exp))))
+        (else (error "Unknown expression type -- ANALYZE " exp))))
 
 (define (apply-inner procedure arguments)
   (cond ((primitive-procedure? procedure)
@@ -31,7 +32,7 @@
         (else
           (error "Unknown procedure type --  APPLY " procedure))))
 
-; 过程参数,eval 使用
+; 过程参数，eval 使用
 
 (define (list-of-values exps env)
   (if (no-operands? exps)
@@ -39,9 +40,8 @@
     (cons (eval (first-operand exps) env)
           (list-of-values (rest-operands exps) env))))
 
-
-(define input-prompt ";;; M-Eval input:")
-(define output-prompt ";;; M-Eval value:")
+(define input-prompt ";;; M-Eval input: ")
+(define output-prompt ";;; M-Eval values: ")
 (define (driver-loop)
   (prompt-for-input input-prompt)
   (let ((input (read)))
@@ -51,20 +51,15 @@
   (driver-loop))
 (define (prompt-for-input string)
   (newline) (newline) (display string) (newline))
-
 (define (announce-output string)
   (newline) (display string) (newline))
 (define (user-print object)
   (if (compound-procedure? object)
-      (display (list 'compound-procedure
-                     (procedure-parameters object)
-                     (procedure-body object)
-                     '<procedure-env>))
-      (display object)))
+    (display (list 'compound-procedure
+                    (procedure-parameters object)
+                    (procedure-body object)
+                    '<procedure-env>))
+    (display object)))
+
 (define the-global-environment (setup-environment))
 (driver-loop)
-
-
-
-
-
