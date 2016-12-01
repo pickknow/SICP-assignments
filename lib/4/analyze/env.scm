@@ -1,4 +1,3 @@
-(load "util.scm")
 ; 环境的表示
 
 (define (enclosing-environment env)

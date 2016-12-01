@@ -1,5 +1,3 @@
-
-(load "util.scm")
 (define (assignment? exp)
   (tagged-list? exp 'set!))
 (define (assignment-variable exp) (cadr exp))
@@ -42,6 +40,9 @@
 (define (make-if predicate consequent alternative)
   (list 'if predicate consequent alternative))
 (define (eval-if exp env)
+ (newline)
+ (display (actual-value (if-predicate exp) env))
+ (newline)
   (if (true? (actual-value (if-predicate exp) env))
       (eval (if-consequent exp) env)
       (eval (if-alternative exp) env)))

@@ -1,4 +1,3 @@
-(load "keyword.scm")
 
 (define (self-evaluating? exp)
   (cond ((number? exp) true)
